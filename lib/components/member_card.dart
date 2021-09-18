@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:spotify_pay_flutter/models/member.dart';
+import 'package:spotify_pay_flutter/models/member_model.dart';
 
 class MemberCard extends StatelessWidget {
-  const MemberCard({Key? key, required this.data})
+  const MemberCard({Key? key, required this.data, required this.haveData})
       : super(
           key: key,
         );
   final Member data;
-
+  final bool haveData;
   int getStatus() {
     DateTime now = new DateTime.now();
     DateTime date = new DateTime(now.year, now.month, now.day);
@@ -102,6 +102,7 @@ class MemberCard extends StatelessWidget {
       stops: [0.0, 1.0],
       tileMode: TileMode.clamp,
     )),
+    BoxDecoration(color: Colors.grey),
   ];
   @override
   Widget build(BuildContext context) {
@@ -110,74 +111,91 @@ class MemberCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.antiAliasWithSaveLayer,
       elevation: 10,
-      child: Container(
+      child: myCard(status),
+    );
+  }
+
+  Container myCard(int status) {
+    return Container(
         height: 230,
-        decoration: card_style[status],
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: 150,
-              height: 260,
-              child: Image.network(
-                '${data.imgSrc}',
-                fit: BoxFit.cover,
-              ),
-            ),
-            Expanded(
-                child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      data.name,
-                      style: TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
-                  Text(
-                    getMessageStatus(getStatus()),
-                    style: TextStyle(
-                        fontSize: 15,
-                        // fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  Expanded(
-                      child: SizedBox(
-                    height: 1,
-                  )),
-                  FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      "จ่ายล่าสุด : ${dateToString(data.lastDate)}",
-                      style: TextStyle(
-                          fontSize: 15,
-                          // fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
-                  FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Text(
-                      "หมดอายุ  : ${dateToString(data.expireDate)}",
-                      style: TextStyle(
-                          fontSize: 15,
-                          // fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ))
-          ],
+        decoration: haveData ? card_style[status] : card_style[3],
+        child: haveData
+            ? normalCard()
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("เลือกสมาชิกเพื่อทำการแสดง"),
+                    Text("ไปที่ตั้งค่า > สมาชิกที่แสดง > เลือกสมาชิกที่ต้องการ")
+                  ],
+                ),
+              ));
+  }
+
+  Row normalCard() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          width: 150,
+          height: 260,
+          child: Image.network(
+            '${data.imgSrc}',
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
+        Expanded(
+            child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  data.name,
+                  style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+              Text(
+                getMessageStatus(getStatus()),
+                style: TextStyle(
+                    fontSize: 15,
+                    // fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              Expanded(
+                  child: SizedBox(
+                height: 1,
+              )),
+              FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  "จ่ายล่าสุด : ${dateToString(data.lastDate)}",
+                  style: TextStyle(
+                      fontSize: 15,
+                      // fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+              FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  "หมดอายุ  : ${dateToString(data.expireDate)}",
+                  style: TextStyle(
+                      fontSize: 15,
+                      // fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ))
+      ],
     );
   }
 }

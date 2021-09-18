@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_pay_flutter/components/member_card.dart';
-import 'package:spotify_pay_flutter/models/member.dart';
+import 'package:spotify_pay_flutter/models/member_model.dart';
 
 class MemberList extends StatelessWidget {
   const MemberList({
@@ -43,7 +43,10 @@ class MemberList extends StatelessWidget {
               Container(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 20),
-                  child: MemberCard(data: member),
+                  child: MemberCard(
+                    data: member,
+                    haveData: true,
+                  ),
                 ),
               )
           ],
