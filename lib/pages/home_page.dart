@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotify_pay_flutter/config/state_members.dart';
 import 'package:spotify_pay_flutter/models/member_model.dart';
 
@@ -18,24 +20,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  bool refresh = false;
+  // FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
+  bool isLoading = false;
+  bool isRefresh = false;
+  late List<Member> _memberResult;
 
-  Future<List<Member>> fetchMember() async {
-    var response = await http.get(
-        Uri.parse('https://mysitebackend.herokuapp.com/api/member/get/all'));
-    var memberObjsJson = jsonDecode(response.body);
-
-    List<Member> result = [];
-    for (var i in memberObjsJson) {
-      Member a = Member.fromJson(i);
-      result.add(a);
-    }
-    StateMembers.memberList = result;
-    return result;
+  @override
+  void initState() {
+    super.initState();
+    fetchMember();
   }
 
-  Future<List<Member>> refreshMember() async {
-    refresh = true;
+  Future<void> fetchMember() async {
+    isLoading = true;
     var response = await http.get(
         Uri.parse('https://mysitebackend.herokuapp.com/api/member/get/all'));
     var memberObjsJson = jsonDecode(response.body);
@@ -45,9 +42,26 @@ class _HomeState extends State<Home> {
       Member a = Member.fromJson(i);
       result.add(a);
     }
-    refresh = false;
     StateMembers.memberList = result;
-    return result;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? id = prefs.getString('memberSelectId');
+    if (id != null) {
+      StateMembers.memberIdSelect = id;
+    }
+    String? name = prefs.getString('memberSelectName');
+    if (name != null) {
+      StateMembers.membernameSelect = name;
+    }
+    isLoading = false;
+    setState(() {
+      _memberResult = StateMembers.memberList;
+    });
+  }
+
+  Future<void> refreshMember() async {
+    isRefresh = true;
+    await this.fetchMember();
+    isRefresh = false;
   }
 
   @override
@@ -56,29 +70,22 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Container(
         color: Colors.white70,
-        // color: Colors.black87,
         child: RefreshIndicator(
           onRefresh: refreshMember,
-          child: FutureBuilder(
-              future: fetchMember(),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.done ||
-                    refresh) {
-                  List<Member> result = snapshot.data;
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Container(
-                            child: HomeHeader(size: size, membersData: result)),
-                        Container(child: MemberList(membersData: result)),
-                      ],
-                    ),
-                  );
-                }
-                return Center(
+          child: isLoading
+              ? Center(
                   child: CircularProgressIndicator(),
-                );
-              }),
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                          child: HomeHeader(
+                              size: size, membersData: _memberResult)),
+                      Container(child: MemberList(membersData: _memberResult)),
+                    ],
+                  ),
+                ),
         ),
       ),
     );

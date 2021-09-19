@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spotify_pay_flutter/components/member_card.dart';
 import 'package:spotify_pay_flutter/config/state_members.dart';
 import 'package:spotify_pay_flutter/models/member_model.dart';
@@ -24,8 +25,6 @@ class _HomeHeaderState extends State<HomeHeader> {
   }
 
   late Member memBerSelected;
-
-  static setPinCard() {}
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +68,7 @@ class _HomeHeaderState extends State<HomeHeader> {
       colorCode = Color(0xFF343F56);
       textColor = Colors.white;
     } else {
-      welcomeMsg = 'ฝันดีนะค้าบบ';
+      welcomeMsg = 'ฝันดีนะค้าบบบบ';
       colorCode = Color(0xFFF002233);
       textColor = Colors.white;
     }
@@ -106,7 +105,9 @@ class _HomeHeaderState extends State<HomeHeader> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => Setting()),
-                        );
+                        ).then((value) {
+                          setState(() {});
+                        });
                         print("setting");
                       },
                     ),

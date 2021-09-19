@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 // import 'package:provider/provider.dart';
-import 'package:spotify_pay_flutter/pages/home_page.dart';
 import 'package:spotify_pay_flutter/pages/main_page.dart';
-import 'package:spotify_pay_flutter/pages/pay_page.dart';
 
 void main() {
   Intl.defaultLocale = 'th';

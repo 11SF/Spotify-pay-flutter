@@ -29,12 +29,6 @@ class MemberList extends StatelessWidget {
                             fontSize: 18,
                             color: Colors.black,
                             fontWeight: FontWeight.w600)),
-                    Expanded(
-                      child: SizedBox(
-                        height: 1,
-                      ),
-                    ),
-                    Text("ยกเลิกการ Pin")
                   ],
                 ),
               ),

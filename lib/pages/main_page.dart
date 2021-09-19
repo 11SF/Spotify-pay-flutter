@@ -11,19 +11,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  // void _onItemTapped(int index) {
-  //   if (index == 0) {
-  //     setState(() {
-  //       _selectedIndex = 0;
-  //     });
-  //   } else {
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => Pay()),
-  //     );
-  //   }
-  // }
-
   List<Widget> _pages = <Widget>[Home(), Pay()];
   @override
   Widget build(BuildContext context) {
