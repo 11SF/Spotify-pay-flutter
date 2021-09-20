@@ -108,7 +108,6 @@ class _HomeHeaderState extends State<HomeHeader> {
                         ).then((value) {
                           setState(() {});
                         });
-                        print("setting");
                       },
                     ),
                     Expanded(

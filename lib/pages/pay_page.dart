@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_pay_flutter/pages/qr_page.dart';
 // import 'package:flutter_svg/svg.dart';
 
 class Pay extends StatefulWidget {
@@ -9,55 +10,126 @@ class Pay extends StatefulWidget {
 }
 
 class _PayState extends State<Pay> {
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    GestureDetector pricePanel({int? month, int? price}) {
-      return GestureDetector(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.grey[200],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
+  Widget pricePanel({int? month, int? price, required VoidCallback callback}) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey[200],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: callback,
+          child: Container(
+            padding: EdgeInsets.all(20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(child: Text('$month เดือน')),
-                Text('$price ฿')
+                Expanded(
+                    child: Text(
+                  '$month เดือน',
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                )),
+                Text('$price ฿',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600))
               ],
             ),
           ),
         ),
-      );
-    }
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
 
     List<Widget> priceMenu = [
-      pricePanel(month: 1, price: 35),
-      pricePanel(month: 2, price: 70),
-      pricePanel(month: 3, price: 105),
-      pricePanel(month: 6, price: 210),
-      pricePanel(month: 12, price: 420)
+      pricePanel(
+          month: 1,
+          price: 35,
+          callback: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Qr(
+                          title: '1 เดือน',
+                          price: '35',
+                          imgPath: 'assets/pp_35.jpeg',
+                        )));
+          }),
+      pricePanel(
+          month: 2,
+          price: 70,
+          callback: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Qr(
+                          title: '2 เดือน',
+                          price: '70',
+                          imgPath: 'assets/pp_70.jpeg',
+                        )));
+          }),
+      pricePanel(
+          month: 3,
+          price: 105,
+          callback: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Qr(
+                          title: '3 เดือน',
+                          price: '105',
+                          imgPath: 'assets/pp_105.jpeg',
+                        )));
+          }),
+      pricePanel(
+          month: 6,
+          price: 210,
+          callback: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Qr(
+                          title: '6 เดือน',
+                          price: '210',
+                          imgPath: 'assets/pp_210.jpeg',
+                        )));
+          }),
+      pricePanel(
+          month: 12,
+          price: 420,
+          callback: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Qr(
+                          title: '12 เดือน',
+                          price: '420',
+                          imgPath: 'assets/pp_420.jpeg',
+                        )));
+          }),
     ];
     return Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
           centerTitle: true,
           title: Text("จ่ายเงิน"),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.transparent,
           elevation: 0,
         ),
         body: Container(
           color: Colors.green,
-          child: Column(
-            children: [
-              Image(image: AssetImage('assets/pay_icon.png')),
-              Expanded(
-                  child: SizedBox(
-                height: 1,
-              )),
-              Stack(children: [
-                Image(image: AssetImage('pay_icon.png')),
+          child: Stack(children: [
+            Column(
+              children: [
+                Expanded(
+                    child: SizedBox(
+                  height: 1,
+                )),
                 Container(
                   padding: EdgeInsets.all(40),
                   decoration: BoxDecoration(
@@ -94,10 +166,25 @@ class _PayState extends State<Pay> {
                       ],
                     ),
                   ),
-                ),
-              ])
-            ],
-          ),
+                )
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 70),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Transform.rotate(
+                  angle: 56.8,
+                  child: Image(
+                    image: AssetImage('assets/money.png'),
+                    width: MediaQuery.of(context).size.width * 0.59,
+                    // color: Color.fromRGBO(255, 255, 255, 0.9),
+                    // colorBlendMode: BlendMode.modulate),
+                  ),
+                )
+              ]),
+            ),
+          ]),
         ));
   }
 }
